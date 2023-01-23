@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/mauroapjr/tinyappchallenge/issues"
   },
-  "homepage": "https://github.com/mauroapjr/tinyappchallenge#readme"
+  "homepage": "https://github.com/mauroapjr/tinyappchallenge#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
