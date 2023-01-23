@@ -3,7 +3,7 @@ const app = express();
 const PORT = 8080;
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
+  b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 };
 
@@ -20,8 +20,14 @@ app.get("/", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body); // Log the POST request body to the console
-  res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  res.status(400).send("ok"); // Respond with 'Ok' (we will replace this)
 });
+
+function generateRandomString(randonNum) {
+  let result = Math.floor(Math.random() * Math.pow(10, randonNum));
+
+  return result.toString().length < randonNum ? random(randonNum) : result;
+}
 
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
