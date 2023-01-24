@@ -7,7 +7,7 @@ const generateRandomString = () => {
 };
 
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
+  b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 };
 
@@ -33,9 +33,17 @@ app.post("/urls", (req, res) => {
 app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;
   delete urlDatabase[id];
-  
-  res.redirect('/urls');
 
+  res.redirect("/urls");
+});
+
+app.post("/urls/:id/edit", (req, res) => {
+  const id = req.params.id;
+  const longURL = req.body.longURL;
+  urlDatabase[id] = longURL;
+  console.log(urlDatabase);
+
+  res.redirect("/urls");
 });
 
 app.get("/u/:id", (req, res) => {
