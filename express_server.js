@@ -2,6 +2,10 @@ const express = require("express");
 const app = express();
 const PORT = 8080;
 
+const generateRandomString = () => {
+  return Math.random().toString(36).substring(6);
+};
+
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
@@ -19,15 +23,17 @@ app.get("/", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.status(400).send("ok"); // Respond with 'Ok' (we will replace this)
+  const id = generateRandomString(6);
+  const longURL = req.body.longURL;
+  urlDatabase[id] = longURL;
+  console.log(urlDatabase);
+  res.redirect(`/urls/${id}`);
 });
 
-function generateRandomString(randonNum) {
-  let result = Math.floor(Math.random() * Math.pow(10, randonNum));
-
-  return result.toString().length < randonNum ? random(randonNum) : result;
-}
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  res.redirect(longURL);
+});
 
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
