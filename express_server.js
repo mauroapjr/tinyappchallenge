@@ -24,26 +24,12 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-// app.get("/login", (req, res) => {
-//   const userName = req.body.username;
-//   const templateVars = { userName };
-
-//   res.render("login", templateVars);
-//   res.send(`${userName}`);
-//   res.redirect("/urls");
-// });
-
 app.post("/login", (req, res) => {
   const userName = req.body.username;
   console.log(userName);
   res.cookie("username", userName);
   res.redirect("/urls");
-  // const templateVars = {
-  //   username: req.cookies["username"],
-  //   // ... any other vars
-
-  // console.log(templateVars);
-  // res.render("urls_index", templateVars);
+  
 });
 
 app.post("/urls", (req, res) => {
@@ -99,6 +85,11 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls/new", (req, res) => {
   const templateVars = { username: req.cookies.username };
   res.render("urls_new", templateVars);
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username", req.body);
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
