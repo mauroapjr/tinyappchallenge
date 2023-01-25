@@ -1,20 +1,23 @@
 const express = require("express");
 const app = express();
 const PORT = 8080;
-var cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
 const generateRandomString = () => {
   return Math.random().toString(36).substring(6);
 };
 
 const urlDatabase = {
-  b2xVn2: "http://www.lighthouselabs.ca",
+  "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 };
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(morgan("dev")),
+
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
@@ -29,7 +32,6 @@ app.post("/login", (req, res) => {
   console.log(userName);
   res.cookie("username", userName);
   res.redirect("/urls");
-  
 });
 
 app.post("/urls", (req, res) => {
@@ -86,9 +88,6 @@ app.get("/urls/new", (req, res) => {
   const templateVars = { username: req.cookies.username };
   res.render("urls_new", templateVars);
 });
-
-
-
 
 app.post("/logout", (req, res) => {
   res.clearCookie("username", req.body);
