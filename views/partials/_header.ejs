@@ -13,7 +13,10 @@
     </div>
     <% if(!user_id){ %>
       <form action="/login" method="POST">
+        <label for="email">Email:</label>
         <input type="text" name="username" placeholder="username" class="form-control" required>
+        <label for="password">Password:</label>
+        <input id="password" type="password" name="password" placeholder="password">
         <button class="btn btn-danger">Login</button>
       </form>
       <% } else { %>
