@@ -9,10 +9,11 @@
 </head>
 
 <body>
-  <form method="POST" action="/login">
-    <input name="username">
+  <form method="POST" action="/login" name="login" type="login" value="Email">
+    <label for="email">Email:</label>
+    <input id="email" type="email" name="email" placeholder="email">
+    <label for="password">Password:</label>
     <button type="Submit">Login</button>
   </form>
 </body>
-
 </html>
