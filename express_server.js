@@ -36,7 +36,7 @@ const getUserByEmail = (emailToFind, usersDatabase) => {
     //object[key]//this is I grab the value of an object
     const currentUser = usersDatabase[userKey]; // this gets the user values
     console.log("CURRENT USER:", currentUser);
-    console.log("USER EMAIL TO FIND:", emailToFind)
+    console.log("USER EMAIL TO FIND:", emailToFind);
     if (currentUser.email === emailToFind) {
       return currentUser;
     }
@@ -50,14 +50,6 @@ const generateRandomString = () => {
 
 //const hash = bcrypt.hashSync(password, saltRounds);
 
-// const database = {
-//   user_id: {
-//     id,
-//     email,
-//     password,
-//   },
-// }
-
 const addUser = (email, password) => {
   const newUser = {
     email,
@@ -66,19 +58,6 @@ const addUser = (email, password) => {
 
   database[email] = newUser;
 };
-
-// const authenticateUser = (database, email, password) => {
-//   const potencialUser = database[email];
-
-//   if (!potencialUser) {
-//     return {error: "user not found", user_id: null};
-//   }
-
-//   if (potencialUser.password === password) {
-//     return {error: null, user_id: potencialUser};
-//   }
-//   return {error: "wrong password", user_id:null};
-// };
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
@@ -148,7 +127,7 @@ app.post("/login", (req, res) => {
   const potencialUser = getUserByEmail(user_email, usersDatabase); // this line grabs user from database
   //const potencialUser = usersDatabase[email];//this line does NOT grab the user from the database
   //usersDatabase.users[id]
-console.log("REQ>BODY:", req.body)
+  console.log("REQ>BODY:", req.body);
   if (!potencialUser) {
     return res.status(400).send("User not found");
   }
@@ -166,7 +145,8 @@ app.get("/login", (req, res) => {
   if (userId) {
     res.redirect("/urls");
   } else {
-    res.render("login");
+    const templateVars = { user_id: null };
+    res.render("login", templateVars);
   }
 });
 
