@@ -15,6 +15,7 @@
   <%- include('partials/_header') %>
     <main style="margin: 1em;">
       <h3>My URLs</h3>
+      <h3>Logged: <%= user_id %></h3> <!--changed to user_id instead of id-->
       <table class="table">
         <thead>
           <tr>
@@ -34,7 +35,7 @@
                 <%= urls[id] %>
               </td>
               <td>
-                <form method="GET" action="/urls/<%= id %>">
+                <form method="GET" action="/urls/<%= user_id %>"><!--changed to user_id instead of id-->
                 <button type="submit" class="btn btn-primary" style="color:white"
                   style="height:200px;width:100px">Edit</button>
                 </form>
