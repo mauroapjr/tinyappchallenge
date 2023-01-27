@@ -13,16 +13,17 @@
 
 <body>
   <%- include('partials/_header') %>
+
     <main style="margin: 1em;">
-      <h3>LOGIN HERE:</h3>
-  <form method="POST" action="/login" name="login" type="login">
-    <label for="email">Email:</label>
-    <input id="email" type="email" name="username" placeholder="email">
-    <label for="password">Password:</label>
-    <input id="password" type="password" name="password" placeholder="password">
-    <button type="Submit">Login</button>
-  </form>
-</main>
+      <h3>Register</h3>
+      <form method="POST" action="/register">
+        <label for="email">Email:</label>
+        <input id="email" type="email" name="email" placeholder="email">
+        <label for="password">Password:</label>
+        <input id="password" type="password" name="password" placeholder="password">
+        <button type="submit">Submit</button>
+      </form>
+    </main>
 <!-- Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
   integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

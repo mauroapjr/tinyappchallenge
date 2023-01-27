@@ -50,14 +50,14 @@ const generateRandomString = () => {
 
 //const hash = bcrypt.hashSync(password, saltRounds);
 
-const addUser = (email, password) => {
-  const newUser = {
-    email,
-    password,
-  };
+// const addUser = (email, password) => {
+//   const newUser = {
+//     email,
+//     password,
+//   };
 
-  database[email] = newUser;
-};
+//   database[email] = newUser;
+// };
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
@@ -74,7 +74,8 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const templateVars = { username: req.cookies.user_id }; //changed to user_id
+  const templateVars = { user_id: req.cookies.user_id, }; //changed to user_id
+  
   //console.log(req.session);
   console.log(templateVars);
   res.render("urls_register", templateVars);
@@ -85,7 +86,7 @@ app.post("/register", (req, res) => {
     return res.status(400).send("Email and password are required!");
   }
 
-  for (const values of Object.values(users)) {
+  for (const values of Object.values(usersDatabase)) {
     if (
       values.email.toLocaleLowerCase() === req.body.email.toLocaleLowerCase()
     ) {
@@ -98,9 +99,9 @@ app.post("/register", (req, res) => {
     email: req.body.email,
     password: req.body.password,
   };
-  users[newUser.user_id] = newUser;
+  usersDatabase[newUser.user_id] = newUser;
   res.cookie("user_id", newUser.user_id);
-  console.log(users);
+  console.log(usersDatabase);
 
   return res.redirect(`/urls`);
 });
