@@ -252,12 +252,22 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
+  const templateVars = { user: usersDatabase[req.cookies["user_id"]] }; 
   const id = req.params.id;
   delete urlDatabase[id];
-
-  res.redirect("/urls");
+  let loggedInUser = req.cookies["user_id"];
+  if (!loggedInUser) {
+    
+    return res.status(403).send('CAN NOT ACCESS. LOGIN FIRST.')
+    
+  } else {
+  
+  
+  return res.render("urls_new", templateVars);  
+  }  
 });
 
+   
 app.post("/urls/:id/edit", (req, res) => {
   const id = req.params.id;
   const longURL = req.body.longURL;
