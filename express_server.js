@@ -3,12 +3,16 @@ const app = express();
 const PORT = 8080;
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan("dev"));
+
+
+
+//const hash = bcrypt.hashSync(password, saltRounds);
 
 const urlDatabase = {
   b6UTxQ: {
@@ -51,30 +55,30 @@ const getUserByEmail = (emailToFind, usersDatabase) => {
   return undefined;
 };
 
-const getUserById = (id, urlDatabase) => {
-    const userById = urlDatabase[id];
-    if (userById) {
-      return userById;
-    }
-    return null;
-  };
+// const getUserById = (id, urlDatabase) => {
+//     const userById = urlDatabase[id];
+//     if (userById) {
+//       return userById;
+//     }
+//     return null;
+//   };
   
-  const urlsForUser = function(urlDatabase, id) {
-    let userSpecificURLDatabase = {};
-    console.log("the urlDatabase is: ", urlDatabase);
-    for (const shortURL in urlDatabase) {
-      if (urlDatabase[shortURL].userID === id) {
-        userSpecificURLDatabase[shortURL] = urlDatabase[shortURL];
-      }
-    }
-    return userSpecificURLDatabase;
-  };  
+//   const urlsForUser = function(urlDatabase, id) {
+//     let userSpecificURLDatabase = {};
+//     console.log("the urlDatabase is: ", urlDatabase);
+//     for (const shortURL in urlDatabase) {
+//       if (urlDatabase[shortURL].userID === id) {
+//         userSpecificURLDatabase[shortURL] = urlDatabase[shortURL];
+//       }
+//     }
+//     return userSpecificURLDatabase;
+//   };  
 
 const generateRandomString = () => {
   return Math.random().toString(36).substring(6);
 };
 
-//const hash = bcrypt.hashSync(password, saltRounds);
+
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
@@ -91,16 +95,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  const templateVars = { user_id: req.cookies.user_id, user: usersDatabase[req.cookies["user_id"]] }; //changed to user_id
-  for (const value of Object.values(usersDatabase)) {
-    if (
-    value.email !== req.body.email) {
-      return res.redirect("/urls");
-    }
-  //console.log(req.session);
-  console.log(templateVars);
+  const templateVars = { user_id: null, user: null }; //changed to user_id
+  // for (const value of Object.values(usersDatabase)) {
+  //   if (
+  //   value.email !== req.body.email) {
+  //     return res.redirect("/urls");
+  //   }
+  // //console.log(req.session);
+  // console.log(templateVars);
   res.render("urls_register", templateVars);
-  }
+
 });
 
 app.post("/register", (req, res) => {
@@ -114,19 +118,21 @@ app.post("/register", (req, res) => {
       res.status(400).send("User already exists!");
     }
   }
+  let hash = bcrypt.hashSync(req.body.password, 10);
+  let id= generateRandomString();
   const newUser = {
-    user_id: generateRandomString(),
+    id: id,
     email: req.body.email,
-    password: req.body.password,
+    password: hash
   };
-  usersDatabase[newUser.user_id] = newUser;
-  res.cookie("user_id", newUser.user_id);
+  usersDatabase[id] = newUser;
+  res.cookie("user_id", id);
   console.log(usersDatabase);
 
   return res.redirect("/urls");
 });
 
-// old get
+
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase, user: usersDatabase[req.cookies["user_id"]]  };//old
   console.log(req.cookies);//old
@@ -167,6 +173,8 @@ app.post("/urls", (req, res) => {
   console.log(urlDatabase);
 });
 
+
+
 app.post("/login", (req, res) => {
   const user_email = req.body.username; //leave this as a username
   const { email, password } = req.body;
@@ -178,14 +186,18 @@ app.post("/login", (req, res) => {
   if (!potencialUser) {
     return res.status(400).send("User not found");
   }
-
-  if (potencialUser.password !== password) {
+console.log("POTENCIAL USER", potencialUser);
+console.log("HASH", bcrypt.compareSync(req.body.password, potencialUser.password))
+  if (!bcrypt.compareSync(req.body.password, potencialUser.password)) {
     return res.status(400).send("Password do not match");
   }
 
   res.cookie("user_id", potencialUser.id);
   return res.redirect("/urls");
 });
+
+
+
 
 app.get("/login", (req, res) => {
   let userId = req.body.user_id; //changed session to body and to user_id
