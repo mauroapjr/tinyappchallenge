@@ -9,14 +9,14 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
   <title>TinyApp</title>
-  
+
 </head>
 
 <body>
   <%- include('partials/_header') %>
     <main style="margin: 1em;">
       <h3>My URLs</h3>
-      
+
       <table class="table">
         <thead>
           <tr>
@@ -33,13 +33,10 @@
                 <%= id %>
               </td>
               <td>
-                <%= urls[id] %>
+                <%= urls[id].longURL %>
               </td>
               <td>
-                <form method="GET" action="/urls/<%= user.id %>"><!--changed to user_id instead of id-->
-                <button type="submit" class="btn btn-primary" style="color:white"
-                  style="height:200px;width:100px">Edit</button>
-                </form>
+                <a href="/urls/<%=id%>" class="btn btn-primary">Edit</a>
               </td>
               <td>
                 <form method="POST" action="/urls/<%= id %>/delete">
