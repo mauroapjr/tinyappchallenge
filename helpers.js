@@ -14,4 +14,8 @@ const getUserByEmail = (emailToFind, usersDatabase) => {
   return undefined;
 };
 
-module.exports = { getUserByEmail };
+const generateRandomString = () => {
+  return Math.random().toString(36).substring(6);
+};
+
+module.exports = { getUserByEmail, generateRandomString };
