@@ -13,11 +13,11 @@
     <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
-        <h5 class="card-title">TinyURL for: <%= longURL %>
+        <h5 class="card-title">TinyURL for: <%= longURL.longURL %> <!--changed to id instead of longURL-->
         </h5>
         <p class="card-text">
           Short URL ID: <a href="/u/<%= id %>">
-            <%=id %><!--changed to user_id instead of id-->
+            <%=id %>
           </a>
         </p>
       </div>

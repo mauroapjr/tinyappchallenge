@@ -80,27 +80,29 @@ app.post("/register", (req, res) => {
   };
   usersDatabase[id] = newUser;
   req.session.id = id;
-  return res.redirect("/urls");
+  res.redirect("/urls");
 });
 
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, user: usersDatabase[req.session["user_id"]]  };
-  const userID = req.session["user_id"];
+  const templateVars = { urls: urlDatabase, user: usersDatabase[req.session.id]  };
+  const userID = req.session.id; 
   const user = usersDatabase[userID];
+  
   if (!user) {
     return res.redirect("/login");
   } else {
-    const templateVars = { urls: urlDatabase, user: usersDatabase[req.session["user_id"]]}
+    const templateVars = { urls: urlDatabase, user: usersDatabase[req.session.id]}
     return res.render("urls_index", templateVars);
   }
 });
 
 app.post("/urls", (req, res) => {
   const id = generateRandomString(6);
-  const userID = req.session["user_id"];
+  const userID = req.session.id;
   const user = usersDatabase[userID];
   const longURL = req.body.longURL;
+  
   urlDatabase[id] = {
     longURL: longURL,
     userID: userID,
@@ -111,6 +113,16 @@ app.post("/urls", (req, res) => {
     } else {
     return res.redirect(`/urls/${id}`);  
   }  
+});
+
+app.get("/login", (req, res) => {
+  const userID = req.session.id;
+  if (userID) { 
+    res.redirect("/urls");
+  } else {
+    const templateVars = { user: usersDatabase[req.session.id] };
+    res.render("login", templateVars);
+  }
 });
 
 app.post("/login", (req, res) => {
@@ -127,18 +139,8 @@ app.post("/login", (req, res) => {
   return res.redirect("/urls");
 });
 
-app.get("/login", (req, res) => {
-  let userId = req.body.user_id; 
-  if (userId) {
-    res.redirect("/urls");
-  } else {
-    const templateVars = { user: usersDatabase[req.session["user_id"]] };
-    res.render("login", templateVars);
-  }
-});
-
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id", req.body); 
+  req.session = null;
   res.redirect("/login");
 });
 
@@ -147,11 +149,12 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { user: usersDatabase[req.session["user_id"]] }; 
-  let loggedInUser = req.session["user_id"];
+  const templateVars = { user: usersDatabase[req.session.id] }; 
+  let loggedInUser = req.session.id; 
+  
   if (!loggedInUser) {
     res.status(403).send('Please Log in first')
-    res.redirect("/urls");
+    return res.redirect("/urls");
   } else {
     return res.render("urls_new", templateVars);  
   }  
@@ -161,14 +164,16 @@ app.get("/u/:id", (req, res) => {
   const templateVars = { user: usersDatabase[req.session["user_id"]] };
   const longURL = urlDatabase[req.params.id].longURL;
   const shortURL = req.params.id;
-  let loggedInUser = req.session.user_id;
+  const userID = req.session.id; 
+  let loggedInUser = req.session.id;
+  
   if (!urlDatabase[shortURL]) {
     return res.status(404).send('Page not found');
   }
   if (!loggedInUser ) {
     return res.status(403).send('Not authorized to view, please log in')
   }
-  if(urlDatabase[shortURL].userID !== loggedInUser) {
+  if(userID !== loggedInUser) { //urlDatabase[shortURL].
     return res.status(403).send('This is a Private Link')
   }
   res.redirect(longURL);
@@ -178,8 +183,8 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = {
     id: req.params.id,
     user_id: req.session.user_id, 
-    longURL: urlDatabase[req.params.id].longURL,
-    user: usersDatabase[req.session["user_id"]],
+    longURL: urlDatabase[req.params.id], 
+    user: usersDatabase[req.session.id],
   };
   res.render("urls_show", templateVars);
 });
@@ -188,7 +193,7 @@ app.post("/urls/:id/delete", (req, res) => {
   const templateVars = { user: usersDatabase[req.session["user_id"]] }; 
   const id = req.params.id;
   delete urlDatabase[id];
-  let loggedInUser = req.session["user_id"];
+  let loggedInUser = req.session.id;
   if (!loggedInUser) {
     return res.status(403).send('CAN NOT ACCESS. LOGIN FIRST.')
   } else {
