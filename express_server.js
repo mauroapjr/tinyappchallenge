@@ -109,35 +109,6 @@ app.post("/urls", (req, res) => {
     const errorMessage = 'You must be logged in to do that.';
     res.render("urls_index", templateVars);
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // const id = generateRandomString(6);
-  // const userID = req.session.id;
-  // const user = urlsForUser(userID, urlDatabase);
-  // const longURL = req.body.longURL;
-  
-  // urlDatabase[id] = {
-  //   longURL: longURL,
-  //   userID: userID,
-  // };
-
-  // const templateVars = { user: usersDatabase[userID] }; 
-  //   if (!userID) {
-  //   res.status(403).send('Please Log in first')
-  //   } else {
-  //   return res.redirect(`/urls/${id}`);  
-  // }  
 });
 
 app.get("/login", (req, res) => {
