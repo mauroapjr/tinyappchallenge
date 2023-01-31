@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
 const cookieSession = require('cookie-session')
-const { getUserByEmail, generateRandomString } = require('./helpers');
+const { getUserByEmail, generateRandomString, urlsForUser } = require('./helpers');
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -83,13 +83,12 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 });
 
-
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase, user: usersDatabase[req.session.id]  };
   const userID = req.session.id; 
-  const user = usersDatabase[userID];
+  const user = urlsForUser(userID, urlDatabase);
   
-  if (!user) {
+  if (!userID) {
     return res.redirect("/login");
   } else {
     const templateVars = { urls: urlDatabase, user: usersDatabase[req.session.id]}
@@ -98,21 +97,47 @@ app.get("/urls", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  const id = generateRandomString(6);
-  const userID = req.session.id;
-  const user = usersDatabase[userID];
-  const longURL = req.body.longURL;
+  const templateVars = { urls: urlDatabase, user: usersDatabase[req.session.id]  };
+  if (req.session.userID) {
+    const shortURL = generateRandomString();
+    urlDatabase[shortURL] = {
+      longURL: req.body.longURL,
+      userID: req.session.userID
+    };
+    res.redirect(`/urls/${shortURL}`);
+  } else {
+    const errorMessage = 'You must be logged in to do that.';
+    res.render("urls_index", templateVars);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const id = generateRandomString(6);
+  // const userID = req.session.id;
+  // const user = urlsForUser(userID, urlDatabase);
+  // const longURL = req.body.longURL;
   
-  urlDatabase[id] = {
-    longURL: longURL,
-    userID: userID,
-  };
-  const templateVars = { user: usersDatabase[userID] }; 
-    if (!user) {
-    res.status(403).send('Please Log in first')
-    } else {
-    return res.redirect(`/urls/${id}`);  
-  }  
+  // urlDatabase[id] = {
+  //   longURL: longURL,
+  //   userID: userID,
+  // };
+
+  // const templateVars = { user: usersDatabase[userID] }; 
+  //   if (!userID) {
+  //   res.status(403).send('Please Log in first')
+  //   } else {
+  //   return res.redirect(`/urls/${id}`);  
+  // }  
 });
 
 app.get("/login", (req, res) => {
