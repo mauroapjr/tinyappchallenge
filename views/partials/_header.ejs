@@ -9,20 +9,11 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <a class="nav-item nav-link" href="/register">Register</a>        
+             
       </div>
     </div>
-    <% if(!user){ %>
-      
-      <form action="/login" method="POST">
-        <label for="email">Email:</label>
-        <input type="text" name="username" placeholder="username" class="form-control" required>
-        <label for="password">Password:</label>
-        <input id="password" type="password" name="password" placeholder="password">
-        <button class="btn btn-danger">Login</button>
-      </form>
-      <% } else { %>
-        <h3>Logged: <%= user.email %></h3> <!--changed to user_id instead of id-->
+    <% if(user){ %>
+      <h3>Logged: <%= user.email %></h3> <!--changed to user_id instead of id-->
         <form action="/logout" method="POST">
           <button>Logout</button>
         </form>
