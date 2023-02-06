@@ -48,16 +48,12 @@ const usersDatabase = {
 };
 
 app.get("/", (req, res) => {
-  const templateVars = {
-    username: req.session.user_id,
-    user: usersDatabase[req.session["user_id"]],
-  };
-  res.redirect("/urls");
-  res.redirect("/login", templateVars);
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
+  const userID = req.session.id;
+  if (userID) {
+    res.redirect("/urls");
+  } else {
+  res.redirect("/login");
+  }
 });
 
 app.get("/hello", (req, res) => {
