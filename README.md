@@ -4,8 +4,8 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Final Product
 
-![architecture]([https://github.com/mauroapjr/tinyappchallenge/blob/master/docs/Capture1.JPG])
-![architecture]([https://github.com/mauroapjr/tinyappchallenge/blob/master/docs/Capture2.JPG])
+![architecture][https://github.com/mauroapjr/tinyappchallenge/blob/master/docs/Capture1.JPG]
+![architecture][https://github.com/mauroapjr/tinyappchallenge/blob/master/docs/Capture2.JPG]
 
 ## Dependencies
 
